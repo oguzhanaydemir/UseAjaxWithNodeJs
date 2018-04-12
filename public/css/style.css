@@ -1,0 +1,32 @@
+.lesson-program-header-div{
+    background-color: #F2F2F2   ;
+}
+.lesson-program-header{
+    color: #666666;
+}
+.header-div{
+    border:1px solid #F2F2F2;
+}
+.table-div{
+    width: 100%;
+}
+
+.borderless td, .borderless th {
+    border: none;
+}
+.row{
+    width: 100%;
+}
+
+.col-form-label{
+    color: white;
+    background-color: rgb(90, 90, 90);
+    font-size: 13px;
+}
+#lesson-form{
+    display: none;
+}
+
+.active:hover{
+    cursor: pointer;
+}
