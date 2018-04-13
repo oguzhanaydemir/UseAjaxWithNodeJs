@@ -63,7 +63,7 @@
                 </div>
             </div>
             
-            <div class="row mt-4 pl-2" id="lesson-form">
+            <div class="row mt-4 pl-2" id="lessonForm" s>
                 <div class="col-sm-12">
                     <form action="">
                         <div class="form-group row">
@@ -92,8 +92,8 @@
                             </div>
                         </div>
                         <div class="form-group col-sm-6 float-right">
-                            <button class="btn">XML Göster</button>
-                            <button class="btn float-right mr-5">JSON Göster</button>
+                            <a class="btn btn-primary" id="xmlButton">XML Göster</button>
+                            <a class="btn btn-primary float-right mr-5" id="jsonButton">JSON Göster</a>
                         </div>
                         <div class="form-group mt-2">
                                 <textarea class="form-control" id="data-show" rows="10"></textarea>
@@ -111,9 +111,10 @@
         $( document ).ready(function() {
             
             var id,code,name,content;
+            
 
             $(".active").click(function(){
-                $("#lesson-form").slideDown(1000);
+                $("#lessonForm").slideDown(1000);
                 $.ajax({
                     method:"GET",
                     url:"/lesson",
@@ -131,6 +132,62 @@
                 .fail(function(jqXHR, textStatus, err){
                     console.log("Error response: "+textStatus)
                 });
+            });
+
+            $("#lessonCode").keyup(function(){
+                PutRequest();
+            });
+            $("#lessonName").keyup(function(){
+                PutRequest();
+            });
+            $("#lessonContent").keyup(function(){
+                PutRequest();
+            });
+
+            function PutRequest(){
+                var sendData = TakeFormValues();
+                $.ajax({
+                    url    : "/lesson/"+id,
+                    data   : sendData,
+                    dataType: "json",
+                    method : "PUT",
+                    success: function(data){
+                        console.log(JSON.stringify(data,"",2));
+                    }
+                }); 
+            }
+
+            function TakeFormValues(){
+                  var jsonData = {
+                        code : $("#lessonCode").val(),
+                        name : $("#lessonName").val(),
+                        content : $("#lessonContent").val()
+                    }
+                    return jsonData;
+            }
+
+            
+
+            function ShowXML(){
+                var data = JSON.parse(JSON.stringify(TakeFormValues()));
+                console.log(data.code);
+                var xmlData = "<?xml version=\"1.0\" encoding=\"utf-16\"?>\n\n";
+                xmlData = xmlData + "<lessons>\n";
+                xmlData = xmlData + "   <lesson>\n";
+                xmlData = xmlData + "       <code>\n"    + data.code    + "\n</code>\n";
+                xmlData = xmlData + "       <name>\n"    + data.name    + "\n</name>\n";
+                xmlData = xmlData + "       <content>\n" + data.content + "\n</content>\n";
+                xmlData = xmlData + "   <lesson>\n";
+                xmlData = xmlData + "<lessons>\n";
+                
+                return  xmlData;
+            }
+
+            $("#jsonButton").click(function(){
+                $("#data-show").val(JSON.stringify(TakeFormValues(), "", 2));
+            });
+            $("#xmlButton").click(function(){
+                $("#data-show").val(ShowXML());
             });
         });
     </script>
