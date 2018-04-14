@@ -27,7 +27,17 @@ app.get('/lesson', (req, res) => {
 	});
 });
 
-
+app.put('/lesson/:id', (req, res) => {
+	var id = req.params.id;
+	var lesson = req.body;
+	console.log("Gelen Veri: " + JSON.stringify(lesson, "", 2));
+	Lesson.updateLesson(id, lesson, {}, (err, book) => {
+		if(err){
+			throw err;
+		}
+		res.json(lesson);
+	});
+});
 
 
 app.listen(3000);
