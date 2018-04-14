@@ -39,8 +39,8 @@
                         </tr>
                         <tr class="active">
                             <td>1</td>
-                            <td>BSM 201</td>
-                            <td>Elektrik Devre Temelleri</td>
+                            <td id="lessonCodeCol">BSM 201</td>
+                            <td id="lessonNameCol">Elektrik Devre Temelleri</td>
                         </tr>
                         <tr>
                             <td>2</td>
@@ -107,90 +107,7 @@
               
     <script src=js/jquery-3.3.1.min.js></script>
     <script src=js/bootstrap.min.js></script>
-    <script>
-        $( document ).ready(function() {
-            
-            var id,code,name,content;
-            
-
-            $(".active").click(function(){
-                $("#lessonForm").slideDown(1000);
-                $.ajax({
-                    method:"GET",
-                    url:"/lesson",
-                    })
-                .done(function(response){
-                   var data = JSON.parse(JSON.stringify(response));
-                   id = data[0]._id;
-                   code = data[0].code;
-                   name = data[0].name;
-                   content = data[0].content;
-                   $("#lessonCode").val(code);
-                   $("#lessonName").val(name);
-                   $("#lessonContent").val(content);
-                })
-                .fail(function(jqXHR, textStatus, err){
-                    console.log("Error response: "+textStatus)
-                });
-            });
-
-            $("#lessonCode").keyup(function(){
-                PutRequest();
-            });
-            $("#lessonName").keyup(function(){
-                PutRequest();
-            });
-            $("#lessonContent").keyup(function(){
-                PutRequest();
-            });
-
-            function PutRequest(){
-                var sendData = TakeFormValues();
-                $.ajax({
-                    url    : "/lesson/"+id,
-                    data   : sendData,
-                    dataType: "json",
-                    method : "PUT",
-                    success: function(data){
-                        console.log(JSON.stringify(data,"",2));
-                    }
-                }); 
-            }
-
-            function TakeFormValues(){
-                  var jsonData = {
-                        code : $("#lessonCode").val(),
-                        name : $("#lessonName").val(),
-                        content : $("#lessonContent").val()
-                    }
-                    return jsonData;
-            }
-
-            
-
-            function ShowXML(){
-                var data = JSON.parse(JSON.stringify(TakeFormValues()));
-                console.log(data.code);
-                var xmlData = "<?xml version=\"1.0\" encoding=\"utf-16\"?>\n\n";
-                xmlData = xmlData + "<lessons>\n";
-                xmlData = xmlData + "   <lesson>\n";
-                xmlData = xmlData + "       <code>\n"    + data.code    + "\n</code>\n";
-                xmlData = xmlData + "       <name>\n"    + data.name    + "\n</name>\n";
-                xmlData = xmlData + "       <content>\n" + data.content + "\n</content>\n";
-                xmlData = xmlData + "   <lesson>\n";
-                xmlData = xmlData + "<lessons>\n";
-                
-                return  xmlData;
-            }
-
-            $("#jsonButton").click(function(){
-                $("#data-show").val(JSON.stringify(TakeFormValues(), "", 2));
-            });
-            $("#xmlButton").click(function(){
-                $("#data-show").val(ShowXML());
-            });
-        });
-    </script>
+    <script src="js/ajax.js"></script>
 
 </body>
 </html>

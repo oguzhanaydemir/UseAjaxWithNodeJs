@@ -3,6 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 var path = require('path');
+var xml = require('xml');
 
 
 
@@ -24,6 +25,33 @@ app.get('/lesson', (req, res) => {
 			throw err;
         }
 		res.send(lesson);
+	});
+});
+
+app.get('/show-xml', (req, res) => {
+	Lesson.getLesson((err, lesson) => {
+		if(err){
+			throw err;
+		}
+		var data = {
+			code: lesson[0].code,
+			name: lesson[0].name,
+			content : lesson[0].content
+		}
+		var xmlString = [ { dersler: [ {bilgiler: [{ dersKodu: data.code } , { dersAdi: data.name }, { dersİcerigi: data.content}]}]}];
+		
+		xmlString = xml(xmlString, true);
+		xmlResponse = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> \n" + xmlString;
+		res.send(xmlResponse);
+	});
+});
+
+app.get('/show-json', (req, res) => {
+	Lesson.getLesson((err, lesson) => {
+		if(err){
+			throw err;
+		}
+		res.send(JSON.stringify(lesson, "", 2));
 	});
 });
 
